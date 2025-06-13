@@ -1,7 +1,9 @@
-import openai
 import json
+from openai import OpenAI
+import os
 
-openai.api_key = "your-openai-api-key"  # Replace with env var or config
+# Use environment variable for API key (recommended)
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY", "your-openai-api-key"))
 
 def load_data():
     with open("data/discourse/discourse_posts.json") as f:
@@ -13,7 +15,7 @@ def generate_answer(question):
 
     prompt = f"Question: {question}\n\nContext from Discourse:\n{context}\n\nAnswer:"
 
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": prompt}]
     )
